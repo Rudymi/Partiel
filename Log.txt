@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Partiellog
+{
+    public class Log
+    {
+
+        public Log(string message, string date, string niveau)
+        {
+            Message = message;
+            Date = date;
+            Niveau = niveau;
+        }
+
+        public Log()
+        {
+
+        }
+
+        public string Message { get; set; }
+        public string Date { get; set; }
+        public string Niveau { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Message}: {Date} - {Niveau}";
+        }
+
+
+    }
+}

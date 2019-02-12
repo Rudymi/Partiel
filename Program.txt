@@ -1,0 +1,123 @@
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+
+namespace Partiellog
+{
+    class Program
+    {
+
+        private static Library _library;
+        static void Main(string[] args)
+        {
+
+
+
+            var exit = false;
+            while (!exit)
+            {
+                Console.WriteLine("1 : Ajouter un log en JSON");
+                Console.WriteLine("2 : Sauvegarder JSON dans XML");
+                Console.WriteLine("3 : Afficher tous les log écrits avant la date 10/12/1999");
+                Console.WriteLine("4 : Quitter");
+
+                var input = Console.ReadLine();
+                switch (input)
+                {
+                    case "1":
+                        AjouterLog();
+                        break;
+                    case "2":
+                        JSONToXML();
+                        break;
+                    case "3":
+                        AfficherLog();
+                        break;
+                    case "4":
+                        exit = true;
+                        break;
+                }
+            }
+        }
+        private static void AfficherLog()
+        {
+
+            XElement xelement = XElement.Load(@"C:\Users\Rudy\Documents\partiel.xml");
+            IEnumerable<XElement> codes = from code in xelement.Elements("Log")
+                                          where code.Element("date") < "10/12/1999"
+                                          select code;
+
+            foreach (string zp in codes)
+            {
+                Console.WriteLine(zp);
+            }
+        }
+
+        private static void JSONToXML()
+        {
+            var tag = DeserializeJSON();
+            var serializer = new XmlSerializer(typeof(List<Log>));
+            using (var sw = new StreamWriter(@"C:\Users\Rudy\Documents\log.xml"))
+            {
+                serializer.Serialize(sw, tag);
+            }
+        }
+
+        private static void AjouterLog()
+        {
+            Console.Write("Message : ");
+            var mess = Console.ReadLine();
+            //var date = DateTime.Now;//cela affihe nul je ne sais pas pourquoi
+            Console.Write("Date : ");
+            var date = Console.ReadLine();
+            Console.Write("Niveau : ");
+            var niveau = Console.ReadLine();
+
+            Log log = new Log(mess,date,niveau);
+            var serializer = JsonSerializer.Create();
+            using (StreamWriter sw = new StreamWriter(@"C:\Users\Rudy\Documents\partiel.json"))
+            {
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, log);
+                }
+            }
+        }
+
+        private static Log DeserializeJSON()
+        {
+
+            var serializer = JsonSerializer.Create();
+            using (StreamReader sr = new StreamReader(@"C:\Users\Rudy\Documents\partiel.json"))
+            {
+                using (JsonReader reader = new JsonTextReader(sr))
+                {
+                    var logis = serializer.Deserialize<Log>(reader);
+                    return logis;
+                }
+            }
+
+        }
+
+        private static Log DeserializeXML()
+        {
+                var serializer = JsonSerializer.Create();
+                using (StreamReader sr = new StreamReader(@"C:\Users\Rudy\Documents\partiel.json"))
+                {
+                    using (JsonReader reader = new JsonTextReader(sr))
+                    {
+                        var logis = serializer.Deserialize<Log>(reader);
+                    return logis;
+                    }
+                }
+
+         }
+
+    }
+}

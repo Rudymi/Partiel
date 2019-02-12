@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Partiellog
+{
+    public class Library
+    {
+
+        public List<Log> _logs;
+        public string message;
+        public string date;
+        public string niveau;
+
+        public Library(string v1, string v2, string v3)
+        {
+            this.message = v1;
+            this.date = v2;
+            this.niveau = v3;
+        }
+
+        public Library(List<Log> logs)
+        {
+            _logs = logs;
+        }
+
+        public void Addlog(Log log)
+        {
+            _logs.Add(log);
+        }
+
+        public List<Log> GetLogs()
+        {
+            return _logs;
+        }
+    }
+}
